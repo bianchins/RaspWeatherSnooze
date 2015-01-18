@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>RaspWeatherSnooze</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/weather-icons.css" />
+    
+     <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap-datetimepicker.min.css">
+    
+    <!-- Custom CSS -->
+    <link href="css/simple-sidebar.css" rel="stylesheet">
+    
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+     <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">RaspWeatherSnooze</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+<ul class="nav navbar-nav">
+        <li> <a href="#menu-toggle" id="menu-toggle"> <span class="glyphicon glyphicon-align-justify"></span> Toggle Menu</a></li>
+</ul>
+    </div><!-- /.navbar-collapse -->
+  </div>
+</nav>
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="http://www.raspberrypi.org/" title="Go to Raspberry PI Foundation Home Page">
+                        <img src="raspi.png" alt="Raspberry PI logo"/>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="#dashboard" class="navigation-link"><span class="glyphicon glyphicon-dashboard" style="margin-right:10px;"></span> Dashboard</a>
+                </li>
+                <li>
+                    <a href="#alarms" class="navigation-link"><span class="glyphicon glyphicon-bell" style="margin-right:10px;"></span> Alarms</a>
+                </li>
+                <li>
+                    <a href="#settings" class="navigation-link"><span class="glyphicon glyphicon-cog" style="margin-right:10px;"></span> Settings</a>
+                </li>
+            </ul>
+            
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid" id="dashboard-page">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Dashboard</h1>
+                        <hr/>
+                        <div class="row">  
+                            <div class="col-md-6">
+                              <div class="panel panel-default">
+                                  <div class="panel-heading">System Info <a href="#" class="btn btn-default btn-xs pull-right" style="padding: 2px 6px;" id="btn-update-system-info"><span class="glyphicon glyphicon-refresh"></span></a></div>
+                              <div class="panel-body" style="min-height:250px;">
+                                  <div class="row">  
+                                    <div class="col-md-6">
+                                      <table class="table table-condensed table-hover">
+                                          <tr><td><b>Host</b></td><td id="host"></td></tr>
+                                          <tr><td><b>Kernel</b></td><td id="kernel"></td></tr>
+                                          <tr><td><b>Frequency</b></td><td id="frequency"></td></tr>
+                                          <tr><td><b>Uptime</b></td><td id="uptime"></td></tr>
+                                          <tr><td><b>CPU Load</b></td><td id="cpuload"></td></tr>
+                                          <tr><td><b>Total Memory</b></td><td id="total_mem"></td></tr>
+                                          <tr><td><b>Used Memory</b></td><td id="used_mem"></td></tr>
+                                      </table>
+                                    </div>
+                                      <div class="col-md-6">
+                                        <div class="row">  
+                                            <div class="col-md-6 text-center">
+                                                <span id="cpu_temperature_text" style="font-size:20px;font-weight: bold;"></span>
+                                                <canvas id="cpu_temperature_gauge" style="width:100%"></canvas>
+                                                <small>Cpu temperature</small>
+                                            </div>
+                                            <div class="col-md-6 text-center">
+                                                <span id="percent_used_text" style="font-size:20px;font-weight: bold;"></span>
+                                                <canvas id="percent_used_gauge" style="width:100%"></canvas>
+                                                <small>Memory</small>
+                                            </div>
+                                        </div>
+                                          <div class="row" style="margin-top:10px;">
+                                            <div class="col-md-6 text-center">
+                                                <span id="used_swap_text" style="font-size:20px;font-weight: bold;"></span>
+                                                <canvas id="used_swap_gauge" style="width:100%"></canvas>
+                                                <small>Swap</small>
+                                            </div>
+                                            <div class="col-md-6 text-center">
+                                                <span id="percent_buff_text" style="font-size:20px;font-weight: bold;"></span>
+                                                <canvas id="percent_buff_gauge" style="width:100%"></canvas>
+                                                <small>Memory Buffer</small>
+                                            </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="row">  
+                                      <div class="col-md-12">
+                                          <h4>Disk information</h4>
+                                      <table class="table table-condensed table-hover" id="mount_info">
+                                          <thead><tr><th>Partition</th><th>Total</th><th>Used</th><th>Free</th></tr></thead>
+                                          <tbody></tbody>
+                                      </table>
+                                    </div>
+                                     
+                                  </div>
+                              </div>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">Current weather and forecast <a href="#" class="btn btn-info btn-xs pull-right" id="btn_refresh_weather" style="padding: 2px 6px;"><span class="glyphicon glyphicon-refresh"></span></a></div>
+                              <div class="panel-body" style="min-height:250px;" id="panel_alarms">	
+                                  <div class="row"><!--color:#FDB813-->
+                                      <div class="col-md-6 text-center"><span style="font-size:700%;" id="current_condition_icon"></span><h3 id="current_condition_text"></h3></div>
+                                      <div class="col-md-6">
+                                          <div class="row">
+                                              <div class="col-md-6 text-center"><span class="wi wi-sunrise" style="font-size:40px;"></span><br/><small id="sunrise">-</small></div>
+                                            <div class="col-md-6 text-center"><span class="wi wi-sunset" style="font-size:40px;"></span><br/><small id="sunset">-</small></div>
+                                          </div>
+                                          <div class="row" style="margin-top:20px;">
+                                            <div class="col-md-6 text-center"><span class="wi wi-wind-default" style="font-size:40px;" id="wind_direction"></span><br/><small id="wind">-</small></div>
+                                            <div class="col-md-6 text-center"><span class="wi wi-thermometer" style="font-size:40px;"></span><br/><small id="current_temperature">-</small></div>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-md-12">
+                                          <table class="table table-hover table-condensed" id="forecast_table">
+                                              <thead><tr><th>Day</th><th colspan="2">Condition</th><th>Min. Temp.</th><th>Max. Temp.</th></tr></thead>
+                                              <tbody></tbody>
+                                          </table>
+                                      </div>
+                                  </div>
+                              </div>
+                            </div><!--/panel-->
+                         </div><!--/col-md-6-->
+
+                        </div><!--/row-->
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Alarms page -->
+            <div class="container-fluid" id="alarms-page">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Alarms</h1>
+                        <hr/>
+                        <div class="row">  
+                            <div class="col-md-8">
+                              <div class="panel panel-default">
+                                  <div class="panel-heading">Alarms <a href="#" id="btn-new-alarm" class="btn btn-primary btn-xs pull-right" style="padding: 2px 6px;"><span class="glyphicon glyphicon-plus-sign"></span> Add new</a></div>
+                                  <div class="panel-body">
+                                      <table class="table table-hover" id="table-alarms">
+                                          <thead><tr><th class="text-center">Hour</th><th class="text-center">Mon</th><th class="text-center">Tue</th><th class="text-center">Wed</th><th class="text-center">Thu</th><th class="text-center">Fri</th><th class="text-center">Sat</th><th class="text-center">Sun</th><th>&nbsp;</th></tr></thead>
+                                          <tbody></tbody>
+                                      </table>
+                                  </div>
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="panel panel-info">
+                                  <div class="panel-heading">Clock </div>
+                                  <div class="panel-body">
+                                      <div style="text-align: center; font-size:5.0vw;">
+                                              <span id="hours"></span>:<span id="min"></span>:<span id="sec"></span>
+                                        </div>
+                                  </div>
+                              </div>
+                            </div>
+                        </div>     
+                    </div>
+                </div>
+                <!-- modal new alarm -->
+                <div class="modal fade" id="modal_alarm">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          <h4 class="modal-title">New alarm</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Scheduled Time</label>
+                                        <div class='input-group date' id='alarm-hour'>
+                                            <input type='text' class="form-control" />
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label>Days</label><br/>
+                                   
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" id="monday" value="1"> Monday
+                                      </label>
+                                      <label class="checkbox-inline">
+                                        <input type="checkbox" id="tuesday" value="1"> Tuesday
+                                      </label>
+                                      <label class="checkbox-inline">
+                                        <input type="checkbox" id="wednesday" value="1"> Wednesday
+                                      </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" id="thursday" value="1"> Thursday
+                                      </label><br/>
+                                      <label class="checkbox-inline">
+                                        <input type="checkbox" id="friday" value="1"> Friday
+                                      </label>
+                                      <label class="checkbox-inline">
+                                        <input type="checkbox" id="saturday" value="1"> Saturday
+                                      </label>
+                                        <label class="checkbox-inline">
+                                        <input type="checkbox" id="sunday" value="1"> Sunday
+                                      </label>
+                                      <label class="checkbox-inline">
+                                          <input type="checkbox" id="all-days" value="1"> <b>All days</b>
+                                      </label>
+                                         </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">Close</button>
+                          <button type="button" class="btn btn-success btn-xs" id="save-alarm">Save</button>
+                        </div>
+                      </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                  </div><!-- /.modal -->
+                <!-- /modal new alarm -->
+            </div>
+            <!-- /#alarms-page -->
+            
+            <!-- Settings page -->
+            <div class="container-fluid" id="settings-page">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Settings</h1>
+                        <hr/>
+                        <div class="alert alert-info" role="alert"><strong>Heads up!</strong> if you want more configurations, please edit <code>/cron/config.php</code></div>
+                        <div class="form-group">
+                            <label for="espeak-text">Alarm Text-to-speech</label>
+                            <textarea id="espeak-text" rows="8" class="form-control"></textarea>
+                            <p class="help-block">You can use the following special field (click to insert):<br/>
+                                <a href='#' class='special_field' data-field='[temp]'>[temp]</a> = current temperature<br/>
+                                <a href='#' class='special_field' data-field='[humidity]'>[humidity]</a> = current humidity<br/>
+                                <a href='#' class='special_field' data-field='[condition_text]'>[condition_text]</a> = current weather condition <br/>
+                                <a href='#' class='special_field' data-field='[forecast_low_temp]'>[forecast_low_temp]</a> = today's forecast min temperature<br/>
+                                <a href='#' class='special_field' data-field='[forecast_high_temp]'>[forecast_high_temp]</a> = today's forecast max temperature<br/>
+                                <a href='#' class='special_field' data-field='[forecast_condition]'>[forecast_condition]</a> = today's forecast condition<br/>
+                            </p>
+                        </div>
+                        <a href="#" class="btn btn-success" id="btn-save-settings">Save</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /#settings-page -->
+            
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/gauge.min.js"></script>   
+    <script src="js/moment.min.js"></script>   
+    <script type="text/javascript" src="js/bootstrap-datetimepicker.js"></script>
+    <script src="js/weathersnooze.js"></script>
+    
+    <!-- Menu Toggle Script -->
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    </script>
+
+</body>
+
+</html>
