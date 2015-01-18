@@ -13,6 +13,8 @@
 
 class Weather {
 
+    //Translated in php form original found at 
+    //http://stackoverflow.com/questions/7490660/converting-wind-direction-in-angles-to-text-words  
     function degToCompass($num) {
         $val=floor(($num/22.5)+.5);
         $arr=["N","NNE","NE","ENE","E","ESE", "SE", "SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
