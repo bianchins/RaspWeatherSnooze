@@ -34,6 +34,9 @@ define('_ESPEAK_LANGUAGE','it');
 //Amplitude (espeak -a <amplitude>)
 define('_ESPEAK_AMPLITUDE','100');
 
+//How many times the alarm should speak to you about weather (i reccomend 2 times, during the first i'm sleeping yet...)
+define('_ESPEAK_TIMES','2');
+
 //I want the weather for this city
 define('_WEATHER_CITY','Rimini, Italy');
 
